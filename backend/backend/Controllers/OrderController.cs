@@ -22,5 +22,10 @@ namespace Backend.Controllers
         {
             return _orderService.GetOrders(tracingId);
         }
+
+        public Order Add(Order order)
+        {
+            return _orderService.AddOrder(order);
+        }
     }
 }

@@ -18,5 +18,10 @@ namespace Backend.Services
         {
             return _orderRepository.Orders.Where(o => o.TracingId == tracingId);
         }
+
+        public Order AddOrder(Order order)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

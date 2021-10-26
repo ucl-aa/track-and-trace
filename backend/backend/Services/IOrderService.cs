@@ -6,5 +6,7 @@ namespace Backend.Services
     public interface IOrderService
     {
         IEnumerable<Order> GetOrders(string tracingId = "");
+
+        Order AddOrder(Order order);
     }
 }

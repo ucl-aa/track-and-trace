@@ -7,7 +7,7 @@ using FluentAssertions;
 using Xunit;
 
 namespace Test.Services
-{ 
+{
     public class OrderServiceTest
     {
         private readonly OrderService _orderService;
@@ -92,6 +92,7 @@ namespace Test.Services
             List<Order> results = new (_orderRepository.Orders);
 
             results.Count.Should().Be(3);
+            results[0].Id.Should().Be(15);
         }
     }
 }
