@@ -50,7 +50,7 @@ namespace Test.Controllers
             };
             A.CallTo(() => _orderService.AddOrder(order)).Returns(order);
 
-            Order returnOrder = _controller.Add(order);
+            Order returnOrder = _controller.Post(order);
 
             returnOrder.Should().Be(order);
             A.CallTo(() => _orderService.AddOrder(order)).MustHaveHappenedOnceExactly();
