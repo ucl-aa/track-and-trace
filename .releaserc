@@ -2,7 +2,7 @@
   "branches": [
     "main"
   ],
-  "repositoryUrl": "https://github.com/ucl-aa/webapp.git",
+  "repositoryUrl": "https://github.com/ucl-aa/track-and-trace.git",
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
