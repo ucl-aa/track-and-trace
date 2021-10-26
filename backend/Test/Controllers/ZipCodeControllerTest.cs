@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Backend.Controllers;
 using Backend.Exceptions;
+using Backend.Loggers;
 using Backend.Models;
 using Backend.Services;
 using FakeItEasy;
@@ -14,6 +15,7 @@ namespace Test.Controllers
     {
         private readonly IZipCodeService _zipCodeService;
         private readonly ZipCodeController _controller;
+        private readonly IExceptionLogger _exceptionLogger;
 
         public ZipCodeControllerTest()
         {
@@ -31,9 +33,10 @@ namespace Test.Controllers
                 },
             };
 
+            _exceptionLogger = A.Fake<IExceptionLogger>();
             _zipCodeService = A.Fake<IZipCodeService>();
             A.CallTo(() => _zipCodeService.GetAsync(null)).Returns(zipCodes);
-            _controller = new ZipCodeController(_zipCodeService);
+            _controller = new ZipCodeController(_zipCodeService, _exceptionLogger);
         }
 
         [Fact]
@@ -54,12 +57,16 @@ namespace Test.Controllers
         public async void Should_returnNotFoundActionAndLog_when_serviceThrowsNotFoundException()
         {
             int id = 654;
+            EntityNotFoundException entityNotFoundException = new EntityNotFoundException(nameof(ZipCode), id);
             A.CallTo(() => _zipCodeService.GetAsync(null))
-                .Throws(new EntityNotFoundException(nameof(ZipCode), id));
+                .Throws(entityNotFoundException);
 
             ActionResult<IEnumerable<ZipCode>> returnAction = await _controller.Get(null);
 
             returnAction.Result.Should().BeOfType(typeof(NotFoundObjectResult));
+            A.CallTo(() => _exceptionLogger
+                .LogException(entityNotFoundException, nameof(_controller), null))
+                .MustHaveHappenedOnceExactly();
         }
     }
 }
