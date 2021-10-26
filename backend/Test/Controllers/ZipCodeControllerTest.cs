@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Backend.Controllers;
+using Backend.DataTransferObjects;
 using Backend.Exceptions;
 using Backend.Loggers;
 using Backend.Models;
@@ -90,6 +91,16 @@ namespace Test.Controllers
 
             A.CallTo(() => _exceptionLogger.LogException(exception, nameof(ZipCodeController), _logger))
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void Should_CreatedAtAction_when_postingZipCode()
+        {
+            ZipCodeDto zipCodeDto = new ZipCodeDto();
+
+            ActionResult<ZipCode> result = _controller.Post(zipCodeDto);
+
+            result.Result.Should().BeOfType(typeof(CreatedAtActionResult));
         }
     }
 }
