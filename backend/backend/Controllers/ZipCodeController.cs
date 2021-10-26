@@ -49,8 +49,16 @@ namespace Backend.Controllers
 
         public async Task<ActionResult<ZipCode>> Post(ZipCodeDto zipCodeDto)
         {
-            ZipCode result = await _zipCodeService.AddAsync(zipCodeDto);
-            return CreatedAtAction(nameof(Post), result);
+            try
+            {
+                ZipCode result = await _zipCodeService.AddAsync(zipCodeDto);
+                return CreatedAtAction(nameof(Post), result);
+            }
+            catch (Exception exception)
+            {
+                _exceptionLogger.LogException(exception, nameof(ZipCodeController), _logger);
+                throw;
+            }
         }
     }
 }
