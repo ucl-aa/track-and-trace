@@ -48,12 +48,12 @@ namespace Test.Controllers
         }
 
         [Fact]
-        public void Should_beControllerBase()
+        private void Should_beControllerBase()
         {
             _controller.Should().BeAssignableTo(typeof(ControllerBase));
         }
 
-        public class ZipCodeControllerGetTest : ZipCodeControllerTest
+        public class GetTest : ZipCodeControllerTest
         {
             [Fact]
             public void Should_callService_when_gettingZipCodes()
@@ -91,12 +91,12 @@ namespace Test.Controllers
                     // ignored
                 }
 
-                A.CallTo(() => _exceptionLogger.LogException(exception, nameof(ZipCodeController), _logger))
+                A.CallTo(() => _exceptionLogger.Log(exception, nameof(ZipCodeController), _logger))
                     .MustHaveHappenedOnceExactly();
             }
         }
 
-        public class ZipCodeControllerPostTest : ZipCodeControllerTest
+        public class PostTest : ZipCodeControllerTest
         {
             [Fact]
             public async void Should_returnCreatedAtAction_when_postingZipCode()
@@ -145,7 +145,52 @@ namespace Test.Controllers
                     // ignored
                 }
 
-                A.CallTo(() => _exceptionLogger.LogException(exception, nameof(ZipCodeController), _logger))
+                A.CallTo(() => _exceptionLogger.Log(exception, nameof(ZipCodeController), _logger))
+                    .MustHaveHappenedOnceExactly();
+            }
+        }
+
+        public class DeleteTest : ZipCodeControllerTest
+        {
+            [Fact]
+            public void Should_useService_when_deleting()
+            {
+                int id = 645;
+
+                _controller.Delete(id);
+
+                A.CallTo(() => _zipCodeService.DeleteAsync(id)).MustHaveHappenedOnceExactly();
+            }
+
+            [Fact]
+            public async void Should_returnNotFound_when_serviceThrowsNotFoundException()
+            {
+                int id = 231;
+                EntityNotFoundException exception = new EntityNotFoundException(nameof(ZipCode), id);
+                A.CallTo(() => _zipCodeService.DeleteAsync(id)).Throws(exception);
+
+                var result = await _controller.Delete(id);
+
+                result.Should().BeOfType(typeof(NotFoundObjectResult));
+            }
+
+            [Fact]
+            public void Should_log_when_serviceThrowsExceptionOnDelete()
+            {
+                int id = 98;
+                Exception exception = new Exception();
+                A.CallTo(() => _zipCodeService.DeleteAsync(id)).Throws(exception);
+
+                try
+                {
+                    _controller.Delete(id);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+
+                A.CallTo(() => _exceptionLogger.Log(exception, nameof(ZipCodeController), _logger))
                     .MustHaveHappenedOnceExactly();
             }
         }

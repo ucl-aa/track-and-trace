@@ -42,11 +42,12 @@ namespace Backend.Controllers
             }
             catch (Exception exception)
             {
-                _exceptionLogger.LogException(exception, nameof(ZipCodeController), _logger);
+                _exceptionLogger.Log(exception, nameof(ZipCodeController), _logger);
                 throw;
             }
         }
 
+        [HttpPost]
         public async Task<ActionResult<ZipCode>> Post(ZipCodeDto zipCodeDto)
         {
             try
@@ -56,7 +57,26 @@ namespace Backend.Controllers
             }
             catch (Exception exception)
             {
-                _exceptionLogger.LogException(exception, nameof(ZipCodeController), _logger);
+                _exceptionLogger.Log(exception, nameof(ZipCodeController), _logger);
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                await _zipCodeService.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (EntityNotFoundException exception)
+            {
+                return NotFound(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                _exceptionLogger.Log(exception, nameof(ZipCodeController), _logger);
                 throw;
             }
         }
