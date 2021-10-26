@@ -94,12 +94,10 @@ namespace Test.Controllers
                 A.CallTo(() => _exceptionLogger.LogException(exception, nameof(ZipCodeController), _logger))
                     .MustHaveHappenedOnceExactly();
             }
-
         }
 
         public class ZipCodeControllerPostTest : ZipCodeControllerTest
         {
-
             [Fact]
             public async void Should_returnCreatedAtAction_when_postingZipCode()
             {
