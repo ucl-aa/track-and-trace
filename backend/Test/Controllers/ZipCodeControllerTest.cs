@@ -7,6 +7,7 @@ using Backend.Services;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace Test.Controllers
@@ -16,6 +17,7 @@ namespace Test.Controllers
         private readonly IZipCodeService _zipCodeService;
         private readonly ZipCodeController _controller;
         private readonly IExceptionLogger _exceptionLogger;
+        private readonly ILogger _logger;
 
         public ZipCodeControllerTest()
         {
@@ -35,8 +37,12 @@ namespace Test.Controllers
 
             _exceptionLogger = A.Fake<IExceptionLogger>();
             _zipCodeService = A.Fake<IZipCodeService>();
+            _logger = new LoggerFactory().CreateLogger("test logger");
             A.CallTo(() => _zipCodeService.GetAsync(null)).Returns(zipCodes);
-            _controller = new ZipCodeController(_zipCodeService, _exceptionLogger);
+            _controller = new ZipCodeController(
+                _zipCodeService,
+                _exceptionLogger,
+                _logger);
         }
 
         [Fact]
@@ -65,7 +71,7 @@ namespace Test.Controllers
 
             returnAction.Result.Should().BeOfType(typeof(NotFoundObjectResult));
             A.CallTo(() => _exceptionLogger
-                .LogException(entityNotFoundException, nameof(_controller), null))
+                .LogException(entityNotFoundException, nameof(ZipCodeController), _logger))
                 .MustHaveHappenedOnceExactly();
         }
     }

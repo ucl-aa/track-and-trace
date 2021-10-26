@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Backend.Exceptions;
+using Backend.Loggers;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Backend.Controllers
 {
@@ -11,11 +14,18 @@ namespace Backend.Controllers
     [Route("[controller]")]
     public class ZipCodeController : ControllerBase
     {
+        private readonly ILogger _logger;
         private readonly IZipCodeService _zipCodeService;
+        private readonly IExceptionLogger _exceptionLogger;
 
-        public ZipCodeController(IZipCodeService zipCodeService)
+        public ZipCodeController(
+            IZipCodeService zipCodeService,
+            IExceptionLogger exceptionLogger,
+            ILogger logger)
         {
             _zipCodeService = zipCodeService;
+            _exceptionLogger = exceptionLogger;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -27,6 +37,7 @@ namespace Backend.Controllers
             }
             catch (EntityNotFoundException exception)
             {
+                _exceptionLogger.LogException(exception, nameof(ZipCodeController), _logger);
                 return NotFound(exception.Message);
             }
         }
