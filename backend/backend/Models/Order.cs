@@ -6,10 +6,10 @@ namespace Backend.Models
     public class Order
     {
         [Key]
-        public int Id { get; set; }
+        public int Id { get; init; }
 
         public List<Status> StatusHistory { get; set; }
 
-        public string TracingId { get; set; }
+        public string TracingId { get; init; }
     }
 }
