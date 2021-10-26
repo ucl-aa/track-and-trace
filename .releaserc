@@ -1,0 +1,49 @@
+{
+  "branches": [
+    "main"
+  ],
+  "repositoryUrl": "https://github.com/ucl-aa/track-and-trace.git",
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md",
+        "changelogTitle": "# Semantic Versioning Changelog"
+      }
+    ],
+    "@semantic-release/npm",
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "cd backend/backend && docker build -t aa-track-and-trace ."
+      }
+    ],
+    [
+      "@semantic-release-plus/docker",
+      {
+        "name": "aa-track-and-trace",
+        "registry": "cr.seen.wtf",
+        "skipLogin": true
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "CHANGELOG.md",
+          "package.json"
+        ]
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          "package.json"
+        ]
+      }
+    ]
+  ]
+}
