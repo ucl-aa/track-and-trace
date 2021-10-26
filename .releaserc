@@ -17,13 +17,13 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "docker build -t webapp ."
+        "prepareCmd": "cd backend/backend && docker build -t aa-track-and-trace ."
       }
     ],
     [
       "@semantic-release-plus/docker",
       {
-        "name": "webapp",
+        "name": "aa-track-and-trace",
         "registry": "cr.seen.wtf",
         "skipLogin": true
       }
