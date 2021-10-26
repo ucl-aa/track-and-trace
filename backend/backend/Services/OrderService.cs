@@ -3,7 +3,7 @@ using System.Linq;
 using backend.Models;
 using backend.Persistency;
 
-namespace backend.Repositories
+namespace backend.Services
 {
     public class OrderService : IOrderService
     {

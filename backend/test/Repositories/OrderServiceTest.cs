@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using backend.Models;
 using backend.Persistency;
-using backend.Repositories;
+using backend.Services;
 using FakeItEasy;
 using FluentAssertions;
 using Xunit;
@@ -63,6 +63,34 @@ namespace test.Repositories
 
             singleOrder.Count.Should().Be(1);
             empty.Count.Should().Be(0);
+        }
+
+        [Fact]
+        public void Should_notSortOrders_when_optionalParameterIsEmpty()
+        {
+            List<Order> orders = new List<Order>
+            {
+                new()
+                {
+                    Id = 15,
+                    TracingId = "Random ass id"
+                },
+                new()
+                {
+                    Id = 2,
+                    TracingId = "John"
+                },
+                new()
+                {
+                    Id = 754,
+                    TracingId = "Molly"
+                }
+            };
+            _orders.AddRange(orders);
+
+            List<Order> results = new(_orderRepository.Orders);
+
+            results.Count.Should().Be(3);
         }
     }
 }

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using backend.Controllers;
 using backend.Models;
-using backend.Repositories;
+using backend.Services;
 using FakeItEasy;
 using Xunit;
 

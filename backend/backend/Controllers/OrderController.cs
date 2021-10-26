@@ -1,7 +1,7 @@
 #nullable enable
 using System.Collections.Generic;
 using backend.Models;
-using backend.Repositories;
+using backend.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers

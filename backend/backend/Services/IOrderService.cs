@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using backend.Models;
 
-namespace backend.Repositories
+namespace backend.Services
 {
     public interface IOrderService
     {
