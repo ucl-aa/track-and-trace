@@ -1,0 +1,49 @@
+{
+  "branches": [
+    "main"
+  ],
+  "repositoryUrl": "https://github.com/ucl-aa/webapp.git",
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md",
+        "changelogTitle": "# Semantic Versioning Changelog"
+      }
+    ],
+    "@semantic-release/npm",
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "docker build -t webapp ."
+      }
+    ],
+    [
+      "@semantic-release-plus/docker",
+      {
+        "name": "webapp",
+        "registry": "cr.seen.wtf",
+        "skipLogin": true
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "CHANGELOG.md",
+          "package.json"
+        ]
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          "package.json"
+        ]
+      }
+    ]
+  ]
+}
