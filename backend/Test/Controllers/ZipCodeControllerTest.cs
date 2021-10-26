@@ -112,9 +112,11 @@ namespace Test.Controllers
                 ZipCodeValue = "5690",
             };
 
-            var result = await _controller.Post(zipCodeDto);
+            var returnCode = await _controller.Post(zipCodeDto);
 
             A.CallTo(() => _zipCodeService.AddAsync(zipCodeDto)).MustHaveHappenedOnceExactly();
+            returnCode.Value.City.Should().Be(zipCodeDto.City);
+            returnCode.Value.ZipCodeValue.Should().Be(zipCodeDto.ZipCodeValue);
         }
     }
 }

@@ -49,6 +49,7 @@ namespace Backend.Controllers
 
         public async Task<ActionResult<ZipCode>> Post(ZipCodeDto zipCodeDto)
         {
+            _zipCodeService.AddAsync(zipCodeDto);
             return CreatedAtAction(nameof(Post), new ZipCode());
         }
     }
