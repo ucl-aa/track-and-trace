@@ -53,76 +53,103 @@ namespace Test.Controllers
             _controller.Should().BeAssignableTo(typeof(ControllerBase));
         }
 
-        [Fact]
-        public void Should_callService_when_gettingZipCodes()
+        public class ZipCodeControllerGetTest : ZipCodeControllerTest
         {
-            _controller.Get(null);
-
-            A.CallTo(() => _zipCodeService.GetAsync(null)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async void Should_returnNotFoundAction_when_serviceThrowsNotFoundException()
-        {
-            int id = 654;
-            EntityNotFoundException entityNotFoundException = new EntityNotFoundException(nameof(ZipCode), id);
-            A.CallTo(() => _zipCodeService.GetAsync(null))
-                .Throws(entityNotFoundException);
-
-            ActionResult<IEnumerable<ZipCode>> returnAction = await _controller.Get(null);
-
-            returnAction.Result.Should().BeOfType(typeof(NotFoundObjectResult));
-        }
-
-        [Fact]
-        public void Should_alwaysLogException_when_serviceThrowsException()
-        {
-            Exception exception = new Exception();
-            A.CallTo(() => _zipCodeService.GetAsync(null)).Throws(exception);
-
-            try
+            [Fact]
+            public void Should_callService_when_gettingZipCodes()
             {
                 _controller.Get(null);
-            }
-            catch (Exception)
-            {
-                // ignored
+
+                A.CallTo(() => _zipCodeService.GetAsync(null)).MustHaveHappenedOnceExactly();
             }
 
-            A.CallTo(() => _exceptionLogger.LogException(exception, nameof(ZipCodeController), _logger))
-                .MustHaveHappenedOnceExactly();
+            [Fact]
+            public async void Should_returnNotFoundAction_when_serviceThrowsNotFoundException()
+            {
+                int id = 654;
+                EntityNotFoundException entityNotFoundException = new EntityNotFoundException(nameof(ZipCode), id);
+                A.CallTo(() => _zipCodeService.GetAsync(null))
+                    .Throws(entityNotFoundException);
+
+                ActionResult<IEnumerable<ZipCode>> returnAction = await _controller.Get(null);
+
+                returnAction.Result.Should().BeOfType(typeof(NotFoundObjectResult));
+            }
+
+            [Fact]
+            public void Should_alwaysLogException_when_serviceThrowsExceptionOnGet()
+            {
+                Exception exception = new Exception();
+                A.CallTo(() => _zipCodeService.GetAsync(null)).Throws(exception);
+
+                try
+                {
+                    _controller.Get(null);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+
+                A.CallTo(() => _exceptionLogger.LogException(exception, nameof(ZipCodeController), _logger))
+                    .MustHaveHappenedOnceExactly();
+            }
+
         }
 
-        [Fact]
-        public async void Should_returnCreatedAtAction_when_postingZipCode()
+        public class ZipCodeControllerPostTest : ZipCodeControllerTest
         {
-            ZipCodeDto zipCodeDto = new ZipCodeDto();
 
-            ActionResult<ZipCode> result = await _controller.Post(zipCodeDto);
-
-            result.Result.Should().BeOfType(typeof(CreatedAtActionResult));
-        }
-
-        [Fact]
-        public async void Should_useServiceWhen_when_postingZipCode()
-        {
-            ZipCodeDto zipCodeDto = new ZipCodeDto
+            [Fact]
+            public async void Should_returnCreatedAtAction_when_postingZipCode()
             {
-                City = "Tommerup",
-                ZipCodeValue = "5690",
-            };
-            A.CallTo(() => _zipCodeService.AddAsync(zipCodeDto)).Returns(new ZipCode
+                ZipCodeDto zipCodeDto = new ZipCodeDto();
+
+                ActionResult<ZipCode> result = await _controller.Post(zipCodeDto);
+
+                result.Result.Should().BeOfType(typeof(CreatedAtActionResult));
+            }
+
+            [Fact]
+            public async void Should_useServiceWhen_when_postingZipCode()
             {
-                City = zipCodeDto.City,
-                ZipCodeValue = zipCodeDto.ZipCodeValue,
-            });
+                ZipCodeDto zipCodeDto = new ZipCodeDto
+                {
+                    City = "Tommerup",
+                    ZipCodeValue = "5690",
+                };
+                A.CallTo(() => _zipCodeService.AddAsync(zipCodeDto)).Returns(new ZipCode
+                {
+                    City = zipCodeDto.City,
+                    ZipCodeValue = zipCodeDto.ZipCodeValue,
+                });
 
-            ActionResult<ZipCode> returnCode = await _controller.Post(zipCodeDto);
+                ActionResult<ZipCode> returnCode = await _controller.Post(zipCodeDto);
 
-            A.CallTo(() => _zipCodeService.AddAsync(zipCodeDto)).MustHaveHappenedOnceExactly();
-            var result = returnCode.Result as CreatedAtActionResult;
-            ((ZipCode)result?.Value)?.City.Should().Be(zipCodeDto.City);
-            ((ZipCode)result?.Value)?.ZipCodeValue.Should().Be(zipCodeDto.ZipCodeValue);
+                A.CallTo(() => _zipCodeService.AddAsync(zipCodeDto)).MustHaveHappenedOnceExactly();
+                var result = returnCode.Result as CreatedAtActionResult;
+                ((ZipCode)result?.Value)?.City.Should().Be(zipCodeDto.City);
+                ((ZipCode)result?.Value)?.ZipCodeValue.Should().Be(zipCodeDto.ZipCodeValue);
+            }
+
+            [Fact]
+            public void Should_log_when_exceptionIsThrowDuringPost()
+            {
+                Exception exception = new Exception();
+                A.CallTo(() => _zipCodeService.AddAsync(null)).Throws(exception);
+
+                try
+                {
+                    _controller.Post(null);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+
+                A.CallTo(() => _exceptionLogger.LogException(exception, nameof(ZipCodeController), _logger))
+                    .MustHaveHappenedOnceExactly();
+            }
         }
     }
 }
