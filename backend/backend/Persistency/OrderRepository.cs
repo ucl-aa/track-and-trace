@@ -14,5 +14,10 @@ namespace Backend.Persistency
         private DbSet<Order> _orders;
 
         public IEnumerable<Order> Orders => _orders;
+
+        public Order AddOrder(Order order)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

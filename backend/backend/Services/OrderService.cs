@@ -21,7 +21,7 @@ namespace Backend.Services
 
         public Order AddOrder(Order order)
         {
-            throw new System.NotImplementedException();
+            return _orderRepository.AddOrder(order);
         }
     }
 }

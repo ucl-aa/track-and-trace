@@ -94,5 +94,18 @@ namespace Test.Services
             results.Count.Should().Be(3);
             results[0].Id.Should().Be(15);
         }
+
+        [Fact]
+        public void Should_addOrderToRepository_when_addingOrder()
+        {
+            Order order = new Order();
+            A.CallTo(() => _orderRepository.AddOrder(order)).Returns(order);
+
+            Order returnOrder = _orderService.AddOrder(order);
+
+            returnOrder.Should().Be(order);
+            A.CallTo(() => _orderRepository.AddOrder(order))
+                .MustHaveHappenedOnceExactly();
+        }
     }
 }

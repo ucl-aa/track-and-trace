@@ -6,5 +6,7 @@ namespace Backend.Persistency
     public interface IOrderRepository
     {
         IEnumerable<Order> Orders { get; }
+
+        Order AddOrder(Order order);
     }
 }
