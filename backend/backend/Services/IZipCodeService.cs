@@ -12,5 +12,7 @@ namespace Backend.Services
         Task<ZipCode> AddAsync(ZipCodeDto zipCodeDto);
 
         Task DeleteAsync(int id);
+
+        Task<ZipCode> UpdateAsync(int id, ZipCodeDto zipCodeDto);
     }
 }

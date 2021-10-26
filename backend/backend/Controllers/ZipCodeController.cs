@@ -80,5 +80,11 @@ namespace Backend.Controllers
                 throw;
             }
         }
+
+        [HttpPut]
+        public async Task<ActionResult<ZipCode>> Put(int id, ZipCodeDto zipCodeDto)
+        {
+            return Ok(await _zipCodeService.UpdateAsync(id, zipCodeDto));
+        }
     }
 }
