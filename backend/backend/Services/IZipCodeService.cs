@@ -9,6 +9,6 @@ namespace Backend.Services
     {
         Task<IEnumerable<ZipCode>> GetAsync(int? id);
 
-        ZipCode AddAsync(ZipCodeDto zipCodeDto);
+        Task<ZipCode> AddAsync(ZipCodeDto zipCodeDto);
     }
 }

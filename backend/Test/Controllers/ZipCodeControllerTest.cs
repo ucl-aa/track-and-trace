@@ -117,11 +117,12 @@ namespace Test.Controllers
                 ZipCodeValue = zipCodeDto.ZipCodeValue,
             });
 
-            var returnCode = await _controller.Post(zipCodeDto);
+            ActionResult<ZipCode> returnCode = await _controller.Post(zipCodeDto);
 
             A.CallTo(() => _zipCodeService.AddAsync(zipCodeDto)).MustHaveHappenedOnceExactly();
-            returnCode.Value.City.Should().Be(zipCodeDto.City);
-            returnCode.Value.ZipCodeValue.Should().Be(zipCodeDto.ZipCodeValue);
+            var result = returnCode.Result as CreatedAtActionResult;
+            ((ZipCode)result?.Value)?.City.Should().Be(zipCodeDto.City);
+            ((ZipCode)result?.Value)?.ZipCodeValue.Should().Be(zipCodeDto.ZipCodeValue);
         }
     }
 }
