@@ -94,7 +94,7 @@ namespace Test.Controllers
         }
 
         [Fact]
-        public async void Should_CreatedAtAction_when_postingZipCode()
+        public async void Should_returnCreatedAtAction_when_postingZipCode()
         {
             ZipCodeDto zipCodeDto = new ZipCodeDto();
 
