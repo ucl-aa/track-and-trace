@@ -102,5 +102,19 @@ namespace Test.Controllers
 
             result.Result.Should().BeOfType(typeof(CreatedAtActionResult));
         }
+
+        [Fact]
+        public async void Should_useServiceWhen_when_postingZipCode()
+        {
+            ZipCodeDto zipCodeDto = new ZipCodeDto
+            {
+                City = "Tommerup",
+                ZipCodeValue = "5690",
+            };
+
+            var result = await _controller.Post(zipCodeDto);
+
+            A.CallTo(() => _zipCodeService.AddAsync(zipCodeDto)).MustHaveHappenedOnceExactly();
+        }
     }
 }
