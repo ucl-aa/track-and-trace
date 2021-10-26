@@ -18,7 +18,6 @@ steps:
       - name: dockersock
         path: /var/run/
     commands:
-      - sleep 6
       - semantic-release
     when:
       status:
