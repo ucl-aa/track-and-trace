@@ -1,0 +1,9 @@
+{
+  "name": "@ucl-aa/aa-track-and-trace",
+  "version": "1.0.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ucl-aa/track-and-trace.git"
+  }
+}
