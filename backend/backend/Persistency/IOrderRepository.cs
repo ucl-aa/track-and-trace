@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using backend.Models;
+using Backend.Models;
 
-namespace backend.Persistency
+namespace Backend.Persistency
 {
     public interface IOrderRepository
-    { 
+    {
         IEnumerable<Order> Orders { get; }
     }
 }

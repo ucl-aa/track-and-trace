@@ -1,18 +1,19 @@
 using System.Collections.Generic;
-using backend.Models;
-using backend.Persistency;
-using backend.Services;
+using Backend.Models;
+using Backend.Persistency;
+using Backend.Services;
 using FakeItEasy;
 using FluentAssertions;
 using Xunit;
 
-namespace test.Repositories
-{
+namespace Test.Services
+{ 
     public class OrderServiceTest
     {
         private readonly OrderService _orderService;
         private readonly IOrderRepository _orderRepository;
         private readonly List<Order> _orders;
+
         public OrderServiceTest()
         {
             _orderRepository = A.Fake<IOrderRepository>();
@@ -21,7 +22,7 @@ namespace test.Repositories
 
             _orderService = new OrderService(_orderRepository);
         }
-        
+
         [Fact]
         public void Should_implementInterface()
         {
@@ -32,7 +33,7 @@ namespace test.Repositories
         public void Should_callDatabase_when_gettingOrders()
         {
             _orderService.GetOrders();
-            
+
             A.CallTo(() => _orderRepository.Orders).MustHaveHappened();
         }
 
@@ -41,25 +42,25 @@ namespace test.Repositories
         {
             List<Order> orders = new List<Order>
             {
-                new()
+                new ()
                 {
                     Id = 1,
-                    TracingId = "first id"
+                    TracingId = "first id",
                 },
-                new()
+                new ()
                 {
                     Id = 14,
-                    TracingId = "different tracing id"
+                    TracingId = "different tracing id",
                 },
-                new()
+                new ()
                 {
                     Id = 5,
-                    TracingId = "#nemt"
-                }
+                    TracingId = "#nemt",
+                },
             };
             _orders.AddRange(orders);
-            List<Order> singleOrder = new(_orderService.GetOrders("first id"));
-            List<Order> empty = new(_orderService.GetOrders("non existing id"));
+            List<Order> singleOrder = new (_orderService.GetOrders("first id"));
+            List<Order> empty = new (_orderService.GetOrders("non existing id"));
 
             singleOrder.Count.Should().Be(1);
             empty.Count.Should().Be(0);
@@ -70,25 +71,25 @@ namespace test.Repositories
         {
             List<Order> orders = new List<Order>
             {
-                new()
+                new ()
                 {
                     Id = 15,
-                    TracingId = "Random ass id"
+                    TracingId = "Random ass id",
                 },
-                new()
+                new ()
                 {
                     Id = 2,
-                    TracingId = "John"
+                    TracingId = "John",
                 },
-                new()
+                new ()
                 {
                     Id = 754,
-                    TracingId = "Molly"
-                }
+                    TracingId = "Molly",
+                },
             };
             _orders.AddRange(orders);
 
-            List<Order> results = new(_orderRepository.Orders);
+            List<Order> results = new (_orderRepository.Orders);
 
             results.Count.Should().Be(3);
         }

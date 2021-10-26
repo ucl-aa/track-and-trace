@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
-using backend.Models;
-using backend.Persistency;
+using Backend.Models;
+using Backend.Persistency;
 
-namespace backend.Services
+namespace Backend.Services
 {
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
+
         public OrderService(IOrderRepository orderRepository)
         {
             _orderRepository = orderRepository;

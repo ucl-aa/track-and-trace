@@ -1,16 +1,18 @@
 using System.Collections.Generic;
-using backend.Models;
+using Backend.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace backend.Persistency
+namespace Backend.Persistency
 {
     public class OrderRepository : DbContext, IOrderRepository
     {
-        private DbSet<Order> _orders;
-        public IEnumerable<Order> Orders => _orders;
-
-        public OrderRepository(DbContextOptions<OrderRepository> options) : base(options)
+        public OrderRepository(DbContextOptions<OrderRepository> options)
+            : base(options)
         {
         }
+
+        private DbSet<Order> _orders;
+
+        public IEnumerable<Order> Orders => _orders;
     }
 }
