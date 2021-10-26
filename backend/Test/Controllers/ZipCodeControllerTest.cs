@@ -94,11 +94,11 @@ namespace Test.Controllers
         }
 
         [Fact]
-        public void Should_CreatedAtAction_when_postingZipCode()
+        public async void Should_CreatedAtAction_when_postingZipCode()
         {
             ZipCodeDto zipCodeDto = new ZipCodeDto();
 
-            ActionResult<ZipCode> result = _controller.Post(zipCodeDto);
+            ActionResult<ZipCode> result = await _controller.Post(zipCodeDto);
 
             result.Result.Should().BeOfType(typeof(CreatedAtActionResult));
         }

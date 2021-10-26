@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Backend.DataTransferObjects;
 using Backend.Exceptions;
 using Backend.Loggers;
 using Backend.Models;
@@ -44,6 +45,11 @@ namespace Backend.Controllers
                 _exceptionLogger.LogException(exception, nameof(ZipCodeController), _logger);
                 throw;
             }
+        }
+
+        public async Task<ActionResult<ZipCode>> Post(ZipCodeDto zipCodeDto)
+        {
+            return CreatedAtAction(nameof(Post), new ZipCode());
         }
     }
 }
