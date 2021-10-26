@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Backend.Controllers;
 using Backend.Exceptions;
 using Backend.Loggers;
@@ -60,7 +61,7 @@ namespace Test.Controllers
         }
 
         [Fact]
-        public async void Should_returnNotFoundActionAndLog_when_serviceThrowsNotFoundException()
+        public async void Should_returnNotFoundAction_when_serviceThrowsNotFoundException()
         {
             int id = 654;
             EntityNotFoundException entityNotFoundException = new EntityNotFoundException(nameof(ZipCode), id);
@@ -70,8 +71,24 @@ namespace Test.Controllers
             ActionResult<IEnumerable<ZipCode>> returnAction = await _controller.Get(null);
 
             returnAction.Result.Should().BeOfType(typeof(NotFoundObjectResult));
-            A.CallTo(() => _exceptionLogger
-                .LogException(entityNotFoundException, nameof(ZipCodeController), _logger))
+        }
+
+        [Fact]
+        public void Should_alwaysLogException_when_serviceThrowsException()
+        {
+            Exception exception = new Exception();
+            A.CallTo(() => _zipCodeService.GetAsync(null)).Throws(exception);
+
+            try
+            {
+                _controller.Get(null);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+
+            A.CallTo(() => _exceptionLogger.LogException(exception, nameof(ZipCodeController), _logger))
                 .MustHaveHappenedOnceExactly();
         }
     }

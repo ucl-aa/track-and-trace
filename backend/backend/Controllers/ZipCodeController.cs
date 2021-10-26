@@ -37,8 +37,12 @@ namespace Backend.Controllers
             }
             catch (EntityNotFoundException exception)
             {
-                _exceptionLogger.LogException(exception, nameof(ZipCodeController), _logger);
                 return NotFound(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                _exceptionLogger.LogException(exception, nameof(ZipCodeController), _logger);
+                throw;
             }
         }
     }
