@@ -111,6 +111,11 @@ namespace Test.Controllers
                 City = "Tommerup",
                 ZipCodeValue = "5690",
             };
+            A.CallTo(() => _zipCodeService.AddAsync(zipCodeDto)).Returns(new ZipCode
+            {
+                City = zipCodeDto.City,
+                ZipCodeValue = zipCodeDto.ZipCodeValue,
+            });
 
             var returnCode = await _controller.Post(zipCodeDto);
 
