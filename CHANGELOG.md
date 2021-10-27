@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.1.0](https://github.com/ucl-aa/track-and-trace/compare/v1.0.0...v1.1.0) (2021-10-27)
+
+
+### Features
+
+* EF as ORM and add Sqlite database ([d3fc7aa](https://github.com/ucl-aa/track-and-trace/commit/d3fc7aa1124e3a819e222385fe5bcf2e577edf59))
+
 # 1.0.0 (2021-10-26)
 
 
