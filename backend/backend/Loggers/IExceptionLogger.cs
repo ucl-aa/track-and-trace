@@ -5,6 +5,6 @@ namespace Backend.Loggers
 {
     public interface IExceptionLogger
     {
-        void LogException(Exception exception, string controllerName, ILogger logger);
+        void Log(Exception exception, string controllerName, ILogger logger);
     }
 }

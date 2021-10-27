@@ -42,15 +42,70 @@ namespace Backend.Controllers
             }
             catch (Exception exception)
             {
-                _exceptionLogger.LogException(exception, nameof(ZipCodeController), _logger);
+                _exceptionLogger.Log(exception, nameof(ZipCodeController), _logger);
                 throw;
             }
         }
 
+        [HttpPost]
         public async Task<ActionResult<ZipCode>> Post(ZipCodeDto zipCodeDto)
         {
-            ZipCode result = await _zipCodeService.AddAsync(zipCodeDto);
-            return CreatedAtAction(nameof(Post), result);
+            try
+            {
+                ZipCode result = await _zipCodeService.AddAsync(zipCodeDto);
+                return CreatedAtAction(nameof(Post), result);
+            }
+            catch (Exception exception)
+            {
+                _exceptionLogger.Log(exception, nameof(ZipCodeController), _logger);
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                await _zipCodeService.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (EntityNotFoundException exception)
+            {
+                return NotFound(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                _exceptionLogger.Log(exception, nameof(ZipCodeController), _logger);
+                throw;
+            }
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<ZipCode>> Put(int id, ZipCodeDto zipCodeDto)
+        {
+            try
+            {
+                return await PutZipCode(id, zipCodeDto);
+            }
+            catch (Exception exception)
+            {
+                _exceptionLogger.Log(exception, nameof(ZipCodeController), _logger);
+                throw;
+            }
+        }
+
+        private async Task<ActionResult<ZipCode>> PutZipCode(int id, ZipCodeDto zipCodeDto)
+        {
+            try
+            {
+                await _zipCodeService.GetAsync(id);
+                return Ok(await _zipCodeService.UpdateAsync(id, zipCodeDto));
+            }
+            catch (EntityNotFoundException)
+            {
+                return CreatedAtAction(nameof(Put), await _zipCodeService.UpdateAsync(id, zipCodeDto));
+            }
         }
     }
 }
