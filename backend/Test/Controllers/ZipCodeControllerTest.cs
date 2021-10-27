@@ -120,7 +120,8 @@ namespace Test.Controllers
 
                 ActionResult<ZipCode> returnCode = await _controller.Post(zipCodeDto);
 
-                A.CallTo(() => _zipCodeService.AddAsync(zipCodeDto)).MustHaveHappenedOnceExactly();
+                A.CallTo(() => _zipCodeService.AddAsync(zipCodeDto))
+                    .MustHaveHappenedOnceExactly();
                 var result = returnCode.Result as CreatedAtActionResult;
                 ((ZipCode)result?.Value)?.City.Should().Be(zipCodeDto.City);
                 ((ZipCode)result?.Value)?.ZipCodeValue.Should().Be(zipCodeDto.ZipCodeValue);
@@ -130,12 +131,14 @@ namespace Test.Controllers
             public async void Should_log_when_exceptionIsThrowDuringPost()
             {
                 Exception exception = new Exception();
-                A.CallTo(() => _zipCodeService.AddAsync(null)).Throws(exception);
+                A.CallTo(() => _zipCodeService.AddAsync(null))
+                    .Throws(exception);
                 Func<Task<ActionResult<ZipCode>>> action = _controller
                     .Awaiting(x => x.Post(null));
                 await action.Should().ThrowAsync<Exception>();
 
-                A.CallTo(() => _exceptionLogger.Log(exception, nameof(ZipCodeController), _logger))
+                A.CallTo(() => _exceptionLogger
+                        .Log(exception, nameof(ZipCodeController), _logger))
                     .MustHaveHappenedOnceExactly();
             }
         }
@@ -149,7 +152,8 @@ namespace Test.Controllers
 
                 _controller.Delete(id);
 
-                A.CallTo(() => _zipCodeService.DeleteAsync(id)).MustHaveHappenedOnceExactly();
+                A.CallTo(() => _zipCodeService.DeleteAsync(id))
+                    .MustHaveHappenedOnceExactly();
             }
 
             [Fact]
@@ -173,7 +177,8 @@ namespace Test.Controllers
 
                 Func<Task<ActionResult>> action = _controller.Awaiting(x => x.Delete(id));
                 await action.Should().ThrowAsync<Exception>();
-                A.CallTo(() => _exceptionLogger.Log(exception, nameof(ZipCodeController), _logger))
+                A.CallTo(() => _exceptionLogger
+                        .Log(exception, nameof(ZipCodeController), _logger))
                     .MustHaveHappenedOnceExactly();
             }
         }
@@ -188,7 +193,26 @@ namespace Test.Controllers
 
                 _controller.Put(id, zipCodeDto);
 
-                A.CallTo(() => _zipCodeService.UpdateAsync(id, zipCodeDto)).MustHaveHappenedOnceExactly();
+                A.CallTo(() => _zipCodeService.UpdateAsync(id, zipCodeDto))
+                    .MustHaveHappenedOnceExactly();
+            }
+
+            [Fact]
+            public async void Should_log_when_serviceThrowsExceptionOnPut()
+            {
+                int id = 5;
+                ZipCodeDto zipCodeDto = new ZipCodeDto();
+                Exception exception = new Exception();
+                A.CallTo(() => _zipCodeService.UpdateAsync(id, zipCodeDto))
+                    .Throws(exception);
+
+                Func<Task<ActionResult<ZipCode>>> action =
+                    _controller.Awaiting(x => x.Put(id, zipCodeDto));
+
+                await action.Should().ThrowAsync<Exception>();
+                A.CallTo(() => _exceptionLogger
+                        .Log(exception, nameof(ZipCodeController), _logger))
+                    .MustHaveHappenedOnceExactly();
             }
         }
     }
