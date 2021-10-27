@@ -28,11 +28,13 @@ namespace Test.Controllers
             {
                 new ()
                 {
+                    ZipCodeId = 1,
                     City = "Aalborg",
                     ZipCodeValue = "4562",
                 },
                 new ()
                 {
+                    ZipCodeId = 2,
                     City = "Skanderborg",
                     ZipCodeValue = "3216",
                 },
@@ -213,6 +215,67 @@ namespace Test.Controllers
                 A.CallTo(() => _exceptionLogger
                         .Log(exception, nameof(ZipCodeController), _logger))
                     .MustHaveHappenedOnceExactly();
+            }
+
+            [Fact]
+            public async void Should_returnCreated_when_putCreatesNewEntity()
+            {
+                int id = 9135319;
+                ZipCodeDto zipCodeDto = new ZipCodeDto
+                {
+                    City = "Vordingborg",
+                    ZipCodeValue = "8620",
+                };
+                ZipCode zipCode = new ZipCode
+                {
+                    ZipCodeId = id,
+                    City = zipCodeDto.City,
+                    ZipCodeValue = zipCodeDto.ZipCodeValue,
+                };
+                EntityNotFoundException exception = new EntityNotFoundException(nameof(ZipCode), id);
+                A.CallTo(() => _zipCodeService.GetAsync(id)).Throws(exception);
+                A.CallTo(() => _zipCodeService.UpdateAsync(id, zipCodeDto)).Returns(zipCode);
+
+                ActionResult<ZipCode> actionResult = await _controller.Put(id, zipCodeDto);
+
+                actionResult.Result.Should().BeOfType(typeof(CreatedAtActionResult));
+                var result = actionResult.Result as CreatedAtActionResult;
+                ((ZipCode)result?.Value)?.City.Should().Be(zipCodeDto.City);
+                ((ZipCode)result?.Value)?.ZipCodeValue.Should().Be(zipCodeDto.ZipCodeValue);
+            }
+
+            [Fact]
+            public async void Should_returnOk_when_putOverwritesExistingEntity()
+            {
+                int id = 4;
+                ZipCodeDto zipCodeDto = new ZipCodeDto
+                {
+                    City = "Vordingborg",
+                    ZipCodeValue = "8620",
+                };
+                ZipCode zipCode = new ZipCode
+                {
+                    ZipCodeId = id,
+                    City = zipCodeDto.City,
+                    ZipCodeValue = zipCodeDto.ZipCodeValue,
+                };
+                ZipCode oldZipCode = new ZipCode
+                {
+                    ZipCodeId = id,
+                };
+                A.CallTo(() => _zipCodeService.GetAsync(id))
+                    .Returns(new List<ZipCode>
+                    {
+                        oldZipCode,
+                    });
+                A.CallTo(() => _zipCodeService.UpdateAsync(id, zipCodeDto)).Returns(zipCode);
+
+                ActionResult<ZipCode> actionResult = await _controller.Put(id, zipCodeDto);
+
+                actionResult.Result.Should().BeOfType(typeof(OkObjectResult));
+                var result = actionResult.Result as CreatedAtActionResult;
+                ((ZipCode)result?.Value)?.City.Should().Be(zipCodeDto.City);
+                ((ZipCode)result?.Value)?.ZipCodeValue.Should().Be(zipCodeDto.ZipCodeValue);
             }
         }
     }

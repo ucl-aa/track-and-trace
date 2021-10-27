@@ -86,12 +86,25 @@ namespace Backend.Controllers
         {
             try
             {
-                return Ok(await _zipCodeService.UpdateAsync(id, zipCodeDto));
+                return await PutZipCode(id, zipCodeDto);
             }
             catch (Exception exception)
             {
                 _exceptionLogger.Log(exception, nameof(ZipCodeController), _logger);
                 throw;
+            }
+        }
+
+        private async Task<ActionResult<ZipCode>> PutZipCode(int id, ZipCodeDto zipCodeDto)
+        {
+            try
+            {
+                await _zipCodeService.GetAsync(id);
+                return Ok(await _zipCodeService.UpdateAsync(id, zipCodeDto));
+            }
+            catch (EntityNotFoundException)
+            {
+                return CreatedAtAction(nameof(Put), await _zipCodeService.UpdateAsync(id, zipCodeDto));
             }
         }
     }
