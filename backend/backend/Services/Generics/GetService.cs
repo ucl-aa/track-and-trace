@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Backend.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Backend.Services
+namespace Backend.Services.Generics
 {
     public class GetService<T>
         where T : class
@@ -22,7 +22,7 @@ namespace Backend.Services
 
         private async Task<IEnumerable<T>> GetSpecificModelAsync(int id)
         {
-            T model = _context.Find<T>(id);
+            T model = await _context.FindAsync<T>(id);
 
             if (model is null)
             {

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Backend.DataTransferObjects;
 using Backend.Models;
 using Backend.Persistency;
+using Backend.Services.Generics;
 
 namespace Backend.Services
 {
@@ -10,9 +11,11 @@ namespace Backend.Services
     {
         private readonly GetService<ZipCode> _getService;
         private readonly DeleteService<ZipCode> _deleteService;
+        private readonly AddService<ZipCode> _addService;
 
         public ZipCodeService(TrackAndTraceContext context)
         {
+            _addService = new AddService<ZipCode>(context);
             _getService = new GetService<ZipCode>(context);
             _deleteService = new DeleteService<ZipCode>(context);
         }
@@ -24,7 +27,7 @@ namespace Backend.Services
 
         public Task<ZipCode> AddAsync(ZipCodeDto zipCodeDto)
         {
-            throw new System.NotImplementedException();
+            return _addService.AddAsync(zipCodeDto.GetZipCode());
         }
 
         public async Task DeleteAsync(int id)
@@ -32,9 +35,10 @@ namespace Backend.Services
             await _deleteService.DeleteAsync(id);
         }
 
-        public Task<ZipCode> UpdateAsync(int id, ZipCodeDto zipCodeDto)
+        public async Task<ZipCode> UpdateAsync(int id, ZipCodeDto zipCodeDto)
         {
-            throw new System.NotImplementedException();
+            await _deleteService.DeleteAsync(id);
+            return await _addService.AddAsync(zipCodeDto.GetZipCode());
         }
     }
 }

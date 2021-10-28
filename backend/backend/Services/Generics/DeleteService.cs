@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Backend.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Backend.Services
+namespace Backend.Services.Generics
 {
     public class DeleteService<T>
         where T : class
