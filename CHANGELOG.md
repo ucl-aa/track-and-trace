@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.2.0](https://github.com/ucl-aa/track-and-trace/compare/v1.1.0...v1.2.0) (2021-10-29)
+
+
+### Features
+
+* Dropoff service and controller ([b10d61b](https://github.com/ucl-aa/track-and-trace/commit/b10d61b656deb0f7ecf84de1da632413d37b3bf4))
+
 # [1.1.0](https://github.com/ucl-aa/track-and-trace/compare/v1.0.0...v1.1.0) (2021-10-27)
 
 
