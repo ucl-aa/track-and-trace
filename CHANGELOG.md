@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.2.2](https://github.com/ucl-aa/track-and-trace/compare/v1.2.1...v1.2.2) (2021-11-01)
+
+
+### Bug Fixes
+
+* Remove old backend folder ([24773d8](https://github.com/ucl-aa/track-and-trace/commit/24773d8b1912435ecb52bd3d8cfb8ccca2e030f4))
+
 ## [1.2.1](https://github.com/ucl-aa/track-and-trace/compare/v1.2.0...v1.2.1) (2021-11-01)
 
 
