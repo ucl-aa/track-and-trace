@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.2.1](https://github.com/ucl-aa/track-and-trace/compare/v1.2.0...v1.2.1) (2021-11-01)
+
+
+### Bug Fixes
+
+* New repository structure ([20cd006](https://github.com/ucl-aa/track-and-trace/commit/20cd0067572d5e11ec849fd89d5cd723f5cc115f))
+
 # [1.2.0](https://github.com/ucl-aa/track-and-trace/compare/v1.1.0...v1.2.0) (2021-10-29)
 
 
