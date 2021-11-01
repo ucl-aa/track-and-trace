@@ -9,7 +9,7 @@ namespace Backend.Services
     {
         Task<IEnumerable<Status>> GetAsync(int? id);
 
-        Task<Status> AddAsync(StatusDto statusDto);
+        Task<Status> AddAsync(Delivery delivery, StatusDto statusDto);
 
         Task DeleteAsync(int id);
 

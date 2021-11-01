@@ -22,6 +22,8 @@ namespace Test.Controllers
         private readonly StatusController _controller;
         private readonly IExceptionLogger _exceptionLogger;
         private readonly ILogger _logger;
+        private readonly Delivery _delivery;
+        private readonly int _deliveryId;
 
         public StatusControllerTest()
         {
@@ -41,11 +43,20 @@ namespace Test.Controllers
                 },
             };
 
+            _delivery = new Delivery();
+            _deliveryId = 546;
+
+            List<Delivery> deliveries = new List<Delivery>
+            {
+                _delivery,
+            };
+
             _exceptionLogger = A.Fake<IExceptionLogger>();
             _statusService = A.Fake<IStatusService>();
             _deliveryService = A.Fake<IDeliveryService>();
             _logger = new LoggerFactory().CreateLogger("test logger");
             A.CallTo(() => _statusService.GetAsync(null)).Returns(statuses);
+            A.CallTo(() => _deliveryService.GetAsync(_deliveryId)).Returns(deliveries);
             _controller = new StatusController(
                 _statusService,
                 _deliveryService,
@@ -104,7 +115,7 @@ namespace Test.Controllers
             {
                 StatusDto statusDto = new StatusDto();
 
-                ActionResult<Status> result = await _controller.Post(1, statusDto);
+                ActionResult<Status> result = await _controller.Post(_deliveryId, statusDto);
 
                 result.Result.Should().BeOfType(typeof(CreatedAtActionResult));
             }
@@ -117,15 +128,16 @@ namespace Test.Controllers
                     UpdateTime = DateTime.Now,
                     Message = "tset sutats",
                 };
-                A.CallTo(() => _statusService.AddAsync(statusDto)).Returns(new Status
+
+                A.CallTo(() => _statusService.AddAsync(_delivery, statusDto)).Returns(new Status
                 {
                     UpdateTime = statusDto.UpdateTime,
                     Message = statusDto.Message,
                 });
 
-                ActionResult<Status> returnCode = await _controller.Post(1, statusDto);
+                ActionResult<Status> returnCode = await _controller.Post(_deliveryId, statusDto);
 
-                A.CallTo(() => _statusService.AddAsync(statusDto))
+                A.CallTo(() => _statusService.AddAsync(_delivery, statusDto))
                     .MustHaveHappenedOnceExactly();
                 var result = returnCode.Result as CreatedAtActionResult;
                 ((Status)result?.Value)?.UpdateTime.Should().Be(statusDto.UpdateTime);
@@ -136,10 +148,10 @@ namespace Test.Controllers
             public async void Should_log_when_exceptionIsThrowDuringPost()
             {
                 Exception exception = new Exception();
-                A.CallTo(() => _statusService.AddAsync(null))
+                A.CallTo(() => _statusService.AddAsync(_delivery, null))
                     .Throws(exception);
                 Func<Task<ActionResult<Status>>> action = _controller
-                    .Awaiting(x => x.Post(1, null));
+                    .Awaiting(x => x.Post(_deliveryId, null));
                 await action.Should().ThrowAsync<Exception>();
 
                 A.CallTo(() => _exceptionLogger

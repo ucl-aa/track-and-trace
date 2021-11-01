@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Backend.DataTransferObjects;
 using Backend.Exceptions;
@@ -78,8 +79,8 @@ namespace Backend.Controllers
 
         private async Task<ActionResult<Status>> ExecutePostStatus(int deliveryId, StatusDto statusDto)
         {
-            await _deliveryService.GetAsync(deliveryId);
-            Status result = await _statusService.AddAsync(statusDto);
+            var deliveries = await _deliveryService.GetAsync(deliveryId);
+            Status result = await _statusService.AddAsync(deliveries.ToList()[0], statusDto);
             return CreatedAtAction(nameof(Post), result);
         }
 
