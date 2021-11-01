@@ -6,7 +6,7 @@ steps:
   - name: test
     image: mcr.microsoft.com/dotnet/sdk:5.0-alpine
     commands:
-      - dotnet test backend
+      - dotnet test src/Test
 
   - name: semantic-release
     image: cr.seen.wtf/semantic-release-container
