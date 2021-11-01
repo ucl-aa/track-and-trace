@@ -17,7 +17,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "cd backend/backend && docker build -t aa-track-and-trace ."
+        "prepareCmd": "cd src/Backend && docker build -t aa-track-and-trace ."
       }
     ],
     [
