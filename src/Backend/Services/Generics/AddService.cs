@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Backend.Persistency;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -9,7 +10,7 @@ namespace Backend.Services.Generics
     {
         private readonly DbContext _context;
 
-        public AddService(DbContext context)
+        public AddService(TrackAndTraceContext context)
         {
             _context = context;
         }

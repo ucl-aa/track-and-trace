@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Backend.Exceptions;
+using Backend.Persistency;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Services.Generics
@@ -9,7 +10,7 @@ namespace Backend.Services.Generics
     {
         private readonly DbContext _context;
 
-        public DeleteService(DbContext context)
+        public DeleteService(TrackAndTraceContext context)
         {
             _context = context;
         }

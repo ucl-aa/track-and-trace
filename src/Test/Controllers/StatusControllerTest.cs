@@ -220,9 +220,9 @@ namespace Test.Controllers
                 int id = 564;
                 StatusDto statusDto = new StatusDto();
 
-                _controller.Put(id, statusDto);
+                _controller.Put(id, statusDto, _deliveryId);
 
-                A.CallTo(() => _statusService.UpdateAsync(id, statusDto))
+                A.CallTo(() => _statusService.UpdateAsync(id, statusDto, _delivery))
                     .MustHaveHappenedOnceExactly();
             }
 
@@ -232,11 +232,11 @@ namespace Test.Controllers
                 int id = 5;
                 StatusDto statusDto = new StatusDto();
                 Exception exception = new Exception();
-                A.CallTo(() => _statusService.UpdateAsync(id, statusDto))
+                A.CallTo(() => _statusService.UpdateAsync(id, statusDto, _delivery))
                     .Throws(exception);
 
                 Func<Task<ActionResult<Status>>> action =
-                    _controller.Awaiting(x => x.Put(id, statusDto));
+                    _controller.Awaiting(x => x.Put(id, statusDto, _deliveryId));
 
                 await action.Should().ThrowAsync<Exception>();
                 A.CallTo(() => _exceptionLogger
@@ -261,9 +261,9 @@ namespace Test.Controllers
                 };
                 EntityNotFoundException exception = new EntityNotFoundException(nameof(status), id);
                 A.CallTo(() => _statusService.GetAsync(id)).Throws(exception);
-                A.CallTo(() => _statusService.UpdateAsync(id, statusDto)).Returns(status);
+                A.CallTo(() => _statusService.UpdateAsync(id, statusDto, _delivery)).Returns(status);
 
-                ActionResult<Status> actionResult = await _controller.Put(id, statusDto);
+                ActionResult<Status> actionResult = await _controller.Put(id, statusDto, _deliveryId);
 
                 actionResult.Result.Should().BeOfType(typeof(CreatedAtActionResult));
                 var result = actionResult.Result as CreatedAtActionResult;
@@ -295,9 +295,9 @@ namespace Test.Controllers
                     {
                         oldStatus,
                     });
-                A.CallTo(() => _statusService.UpdateAsync(id, statusDto)).Returns(status);
+                A.CallTo(() => _statusService.UpdateAsync(id, statusDto, _delivery)).Returns(status);
 
-                ActionResult<Status> actionResult = await _controller.Put(id, statusDto);
+                ActionResult<Status> actionResult = await _controller.Put(id, statusDto, _deliveryId);
 
                 actionResult.Result.Should().BeOfType(typeof(OkObjectResult));
                 var result = actionResult.Result as CreatedAtActionResult;

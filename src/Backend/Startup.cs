@@ -1,5 +1,6 @@
 using Backend.Persistency;
 using Backend.Services;
+using Backend.Services.Generics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,11 @@ namespace Backend
         {
             services.AddControllers();
             services.AddScoped<IZipCodeService, ZipCodeService>();
+            services.AddScoped<IStatusService, StatusService>();
+            services.AddScoped(typeof(AddService<>), typeof(AddService<>));
+            services.AddScoped(typeof(GetService<>), typeof(GetService<>));
+            services.AddScoped(typeof(DeleteService<>), typeof(DeleteService<>));
+
             services
                 .AddSwaggerGen(
                     c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "backend", Version = "v1"}); });

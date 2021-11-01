@@ -13,6 +13,6 @@ namespace Backend.Services
 
         Task DeleteAsync(int id);
 
-        Task<Status> UpdateAsync(int id, StatusDto statusDto);
+        Task<Status> UpdateAsync(int id, StatusDto statusDto, Delivery delivery);
     }
 }
