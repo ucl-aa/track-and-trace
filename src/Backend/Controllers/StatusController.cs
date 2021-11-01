@@ -18,13 +18,16 @@ namespace Backend.Controllers
         private readonly ILogger _logger;
         private readonly IStatusService _statusService;
         private readonly IExceptionLogger _exceptionLogger;
+        private readonly IDeliveryService _deliveryService;
 
         public StatusController(
             IStatusService statusService,
+            IDeliveryService deliveryService,
             IExceptionLogger exceptionLogger,
             ILogger logger)
         {
             _statusService = statusService;
+            _deliveryService = deliveryService;
             _exceptionLogger = exceptionLogger;
             _logger = logger;
         }
@@ -52,14 +55,32 @@ namespace Backend.Controllers
         {
             try
             {
-                Status result = await _statusService.AddAsync(statusDto);
-                return CreatedAtAction(nameof(Post), result);
+                return await PostStatus(deliveryId, statusDto);
             }
             catch (Exception exception)
             {
                 _exceptionLogger.Log(exception, nameof(StatusController), _logger);
                 throw;
             }
+        }
+
+        private async Task<ActionResult<Status>> PostStatus(int deliveryId, StatusDto statusDto)
+        {
+            try
+            {
+                return await ExecutePostStatus(deliveryId, statusDto);
+            }
+            catch (EntityNotFoundException exception)
+            {
+                return BadRequest(exception);
+            }
+        }
+
+        private async Task<ActionResult<Status>> ExecutePostStatus(int deliveryId, StatusDto statusDto)
+        {
+            await _deliveryService.GetAsync(deliveryId);
+            Status result = await _statusService.AddAsync(statusDto);
+            return CreatedAtAction(nameof(Post), result);
         }
 
         [HttpDelete]
@@ -108,6 +129,5 @@ namespace Backend.Controllers
                 return CreatedAtAction(nameof(Put), await _statusService.UpdateAsync(id, statusDto));
             }
         }
-
     }
 }

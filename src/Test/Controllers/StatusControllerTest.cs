@@ -18,6 +18,7 @@ namespace Test.Controllers
     public class StatusControllerTest
     {
         private readonly IStatusService _statusService;
+        private readonly IDeliveryService _deliveryService;
         private readonly StatusController _controller;
         private readonly IExceptionLogger _exceptionLogger;
         private readonly ILogger _logger;
@@ -42,10 +43,12 @@ namespace Test.Controllers
 
             _exceptionLogger = A.Fake<IExceptionLogger>();
             _statusService = A.Fake<IStatusService>();
+            _deliveryService = A.Fake<IDeliveryService>();
             _logger = new LoggerFactory().CreateLogger("test logger");
             A.CallTo(() => _statusService.GetAsync(null)).Returns(statuses);
             _controller = new StatusController(
                 _statusService,
+                _deliveryService,
                 _exceptionLogger,
                 _logger);
         }
@@ -142,6 +145,18 @@ namespace Test.Controllers
                 A.CallTo(() => _exceptionLogger
                         .Log(exception, nameof(StatusController), _logger))
                     .MustHaveHappenedOnceExactly();
+            }
+
+            [Fact]
+            public async void Should_returnBadRequest_when_deliveryCouldNotBeFound()
+            {
+                int id = 123;
+                EntityNotFoundException exception = new EntityNotFoundException(nameof(Delivery), id);
+                A.CallTo(() => _deliveryService.GetAsync(id)).Throws(exception);
+
+                ActionResult<Status> result = await _controller.Post(id, new StatusDto());
+
+                result.Result.Should().BeOfType(typeof(BadRequestObjectResult));
             }
         }
 
