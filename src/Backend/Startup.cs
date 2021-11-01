@@ -32,7 +32,7 @@ namespace Backend
 
             services
                 .AddSwaggerGen(
-                    c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "backend", Version = "v1"}); });
+                    c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "backend", Version = "v1" }); });
             services.AddDbContext<TrackAndTraceContext>(
                 options => options.UseSqlite(
                     Configuration.GetConnectionString("TrackAndTraceContext")));

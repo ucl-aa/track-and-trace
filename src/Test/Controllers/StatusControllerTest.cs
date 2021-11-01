@@ -73,9 +73,9 @@ namespace Test.Controllers
         public class GetTest : StatusControllerTest
         {
             [Fact]
-            public void Should_callService_when_gettingStatuses()
+            public async Task Should_callService_when_gettingStatusesAsync()
             {
-                _controller.Get(null);
+                await _controller.Get(null);
 
                 A.CallTo(() => _statusService.GetAsync(null)).MustHaveHappenedOnceExactly();
             }
@@ -175,11 +175,11 @@ namespace Test.Controllers
         public class DeleteTest : StatusControllerTest
         {
             [Fact]
-            public void Should_useService_when_deleting()
+            public async Task Should_useService_when_deletingAsync()
             {
                 int id = 645;
 
-                _controller.Delete(id);
+                await _controller.Delete(id);
 
                 A.CallTo(() => _statusService.DeleteAsync(id))
                     .MustHaveHappenedOnceExactly();
@@ -215,12 +215,12 @@ namespace Test.Controllers
         public class PutTest : StatusControllerTest
         {
             [Fact]
-            public void Should_callService_when_updatingStatus()
+            public async Task Should_callService_when_updatingStatusAsync()
             {
                 int id = 564;
                 StatusDto statusDto = new StatusDto();
 
-                _controller.Put(id, statusDto, _deliveryId);
+                await _controller.Put(id, statusDto, _deliveryId);
 
                 A.CallTo(() => _statusService.UpdateAsync(id, statusDto, _delivery))
                     .MustHaveHappenedOnceExactly();
