@@ -120,15 +120,18 @@ namespace Backend.Controllers
 
         private async Task<ActionResult<Status>> PutStatus(int id, StatusDto statusDto, int deliveryId)
         {
-            IEnumerable<Delivery> deliveries = await _deliveryService.GetAsync(deliveryId);
+            IEnumerable<Delivery> deliveries = new List<Delivery>();
             try
             {
+                deliveries = await _deliveryService.GetAsync(deliveryId);
                 await _statusService.GetAsync(id);
                 return Ok(await _statusService.UpdateAsync(id, statusDto, deliveries.ToList()[0]));
             }
-            catch (EntityNotFoundException)
+            catch (EntityNotFoundException exception)
             {
-                return CreatedAtAction(nameof(Put), await _statusService.UpdateAsync(id, statusDto, deliveries.ToList()[0]));
+                return exception.EntityName == nameof(Delivery)
+                    ? BadRequest(exception.Message)
+                    : CreatedAtAction(nameof(Put), await _statusService.UpdateAsync(id, statusDto, deliveries.ToList()[0]));
             }
         }
     }
