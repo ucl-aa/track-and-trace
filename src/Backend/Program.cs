@@ -56,7 +56,6 @@ namespace Backend
             logger.LogError(exception, "An error occurred creating the DB: ");
         }
 
-
         private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
