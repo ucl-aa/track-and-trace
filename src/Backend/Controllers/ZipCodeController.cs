@@ -22,7 +22,7 @@ namespace Backend.Controllers
         public ZipCodeController(
             IZipCodeService zipCodeService,
             IExceptionLogger exceptionLogger,
-            ILogger logger)
+            ILogger<ZipCodeController> logger)
         {
             _zipCodeService = zipCodeService;
             _exceptionLogger = exceptionLogger;
