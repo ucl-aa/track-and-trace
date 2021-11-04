@@ -13,11 +13,11 @@ namespace Backend.Services
         private readonly DeleteService<ZipCode> _deleteService;
         private readonly AddService<ZipCode> _addService;
 
-        public ZipCodeService(TrackAndTraceContext context)
+        public ZipCodeService(GetService<ZipCode> getService, DeleteService<ZipCode> deleteService, AddService<ZipCode> addService)
         {
-            _addService = new AddService<ZipCode>(context);
-            _getService = new GetService<ZipCode>(context);
-            _deleteService = new DeleteService<ZipCode>(context);
+            _getService = getService;
+            _deleteService = deleteService;
+            _addService = addService;
         }
 
         public async Task<IEnumerable<ZipCode>> GetAsync(int? id)
