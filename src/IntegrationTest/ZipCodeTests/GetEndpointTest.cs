@@ -1,5 +1,8 @@
+using System.Net.Http;
 using System.Threading.Tasks;
 using Backend;
+using Backend.DataTransferObjects;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace IntegrationTest.ZipCodeTests
@@ -19,11 +22,39 @@ namespace IntegrationTest.ZipCodeTests
         {
             //Expensive to create new client for each test,
             //but ensures that tests aren't dependant on each other.
-            var client = _factory.CreateClient();
+            HttpClient? client = _factory.CreateClient();
 
-            var response = await client.GetAsync(_uri);
+            HttpResponseMessage response = await client.GetAsync(_uri);
 
             response.EnsureSuccessStatusCode();
         }
+
+        [Fact]
+        public async Task Should_returnSpecificZipCode_when_callingGetZipCodeWithId()
+        {
+            var client = _factory.CreateClient();
+
+            ZipCodeDto firstZipCode = new()
+            {
+                City = "Aalborg",
+                ZipCodeValue = "9000",
+            };
+
+            var serialized = JsonConvert.SerializeObject(firstZipCode);
+            var buffer = System.Text.Encoding.UTF8.GetBytes(serialized);
+            var byteContent = new ByteArrayContent(buffer);
+            var firstResponse = await client.PostAsync(_uri, byteContent);
+            
+            ZipCodeDto secondZipCode = new()
+            {
+                City = "Vordingborg",
+                ZipCodeValue = "6007",
+            };
+            serialized = JsonConvert.SerializeObject(secondZipCode);
+            buffer = System.Text.Encoding.UTF8.GetBytes(serialized);
+            byteContent = new ByteArrayContent(buffer);
+            var secondResponse = await client.PostAsync(_uri, byteContent);
+        }
+        
     }
 }
