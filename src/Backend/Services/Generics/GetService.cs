@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Backend.Exceptions;
+using Backend.Persistency;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Services.Generics
@@ -10,7 +11,7 @@ namespace Backend.Services.Generics
     {
         private readonly DbContext _context;
 
-        public GetService(DbContext context)
+        public GetService(TrackAndTraceContext context)
         {
             _context = context;
         }
