@@ -26,6 +26,8 @@ namespace Backend
             services.AddControllers();
             services.AddScoped<IZipCodeService, ZipCodeService>();
             services.AddScoped<IExceptionLogger, ExceptionLoggerStub>();
+            
+            
             services
                 .AddSwaggerGen(
                     c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "backend", Version = "v1"}); });
