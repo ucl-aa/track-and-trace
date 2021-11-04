@@ -20,7 +20,7 @@ namespace Test.Controllers
         private readonly IZipCodeService _zipCodeService;
         private readonly ZipCodeController _controller;
         private readonly IExceptionLogger _exceptionLogger;
-        private readonly ILogger _logger;
+        private readonly ILogger<ZipCodeController> _logger;
 
         public ZipCodeControllerTest()
         {
@@ -42,7 +42,7 @@ namespace Test.Controllers
 
             _exceptionLogger = A.Fake<IExceptionLogger>();
             _zipCodeService = A.Fake<IZipCodeService>();
-            _logger = new LoggerFactory().CreateLogger("test logger");
+            _logger = new LoggerFactory().CreateLogger<ZipCodeController>();
             A.CallTo(() => _zipCodeService.GetAsync(null)).Returns(zipCodes);
             _controller = new ZipCodeController(
                 _zipCodeService,
