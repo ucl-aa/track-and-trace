@@ -8,6 +8,11 @@ steps:
     commands:
       - dotnet test src/Test
 
+  - name: integration-test
+    image: mcr.microsoft.com/dotnet/sdk:5.0-alpine
+    commands:
+      - dotnet test src/IntegrationTest
+
   - name: semantic-release
     image: cr.seen.wtf/semantic-release-container
     pull: always
