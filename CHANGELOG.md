@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.4.0](https://github.com/ucl-aa/track-and-trace/compare/v1.3.0...v1.4.0) (2021-11-06)
+
+
+### Features
+
+* Integration Tests ([672ba93](https://github.com/ucl-aa/track-and-trace/commit/672ba937fb5c375a65517742ee0229d6d6fd2944))
+
 # [1.3.0](https://github.com/ucl-aa/track-and-trace/compare/v1.2.2...v1.3.0) (2021-11-04)
 
 
