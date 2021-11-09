@@ -28,7 +28,8 @@ namespace IntegrationTest.ZipCodeTests
             // Arrange
             var client = _factory.CreateClient();
 
-            int amountOfZipCodes = 2;
+            int id = 1544;
+            int secondId = 1231;
             ZipCodeDto firstZipCode = new()
             {
                 City = "Aalborg",
@@ -39,30 +40,31 @@ namespace IntegrationTest.ZipCodeTests
                 City = "Vordingborg",
                 ZipCodeValue = "6007",
             };
-            
-            var firstResponse = await PutZipCode(firstZipCode, client);
-            await PutZipCode(secondZipCode, client);
+            ZipCodeDto thirdZipCode = new()
+            {
+                City = "Tommerup",
+                ZipCodeValue = "1231",
+            };
 
-            ZipCode? responseContent =
-                JsonConvert.DeserializeObject<ZipCode>
-                    (await firstResponse.Content.ReadAsStringAsync());
-            int id = responseContent.ZipCodeId;
+            var firstResponse = await PutZipCode(firstZipCode, client, id);
 
             // Act
             ByteArrayContent byteContent = CreateContent(firstZipCode);
 
-            var specificZipCodeResponse = await client.PutAsync(_uri + $"?id={id}", byteContent);
-            
+            HttpResponseMessage specificZipCodeResponse = await PutZipCode(thirdZipCode, client, id);
+            var putWithCreateResponse = await PutZipCode(secondZipCode, client, secondId);
+
             // Assert
-            specificZipCodeResponse.EnsureSuccessStatusCode();
+            specificZipCodeResponse.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            putWithCreateResponse.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
             
         }
 
-        private async Task<HttpResponseMessage> PutZipCode(ZipCodeDto firstZipCode, HttpClient client)
+        private async Task<HttpResponseMessage> PutZipCode(ZipCodeDto firstZipCode, HttpClient client, int id)
         {
             ByteArrayContent byteContent = CreateContent(firstZipCode);
 
-            HttpResponseMessage response = await client.PutAsync(_uri, byteContent);
+            HttpResponseMessage response = await client.PutAsync(_uri + $"?id={id}", byteContent);
             response.EnsureSuccessStatusCode();
 
             return response;
