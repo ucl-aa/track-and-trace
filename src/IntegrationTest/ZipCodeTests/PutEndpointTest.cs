@@ -46,18 +46,18 @@ namespace IntegrationTest.ZipCodeTests
                 ZipCodeValue = "1231",
             };
 
-            var firstResponse = await PutZipCode(firstZipCode, client, id);
+            HttpResponseMessage firstResponse = await PutZipCode(firstZipCode, client, id);
 
             // Act
             ByteArrayContent byteContent = CreateContent(firstZipCode);
 
-            HttpResponseMessage specificZipCodeResponse = await PutZipCode(thirdZipCode, client, id);
-            var putWithCreateResponse = await PutZipCode(secondZipCode, client, secondId);
+            HttpResponseMessage putWithCreateResponse = await PutZipCode(secondZipCode, client, secondId);
+            HttpResponseMessage sameIdResponse = await PutZipCode(thirdZipCode, client, id);
 
             // Assert
-            specificZipCodeResponse.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            firstResponse.Content.Should().NotBeEquivalentTo(sameIdResponse);
+            sameIdResponse.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
             putWithCreateResponse.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
-            
         }
 
         private async Task<HttpResponseMessage> PutZipCode(ZipCodeDto firstZipCode, HttpClient client, int id)
