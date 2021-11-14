@@ -30,6 +30,37 @@ namespace IntegrationTest.ZipCodeTests
 
             ZipCodeDto zipCode = new()
             {
+                City = "Aarhus",
+                ZipCodeValue = "9250",
+            };
+
+            var firstResponse = await PutZipCode(zipCode, client);
+
+            ZipCode? responseContent =
+                JsonConvert.DeserializeObject<ZipCode>
+                    (await firstResponse.Content.ReadAsStringAsync());
+            int id = responseContent.ZipCodeId;
+
+            // Act
+            ByteArrayContent byteContent = CreateContent(zipCode);
+            await client.PutAsync(_uri + $"?id={id}", byteContent);
+
+            var specificZipCodeResponse = await client.PutAsync(_uri + $"?id={id}", byteContent);
+
+            // Assert
+            specificZipCodeResponse.EnsureSuccessStatusCode();
+
+        }
+
+        [Fact]
+        public async Task Should_returnSpecificZipCode_when_callingPutZipCodeWithExistingId()
+        {
+            // Expensive to create factory for each test, but it ensures that each test is independent.
+            // Arrange
+            var client = _factory.CreateClient();
+
+            ZipCodeDto zipCode = new()
+            {
                 City = "Aalborg",
                 ZipCodeValue = "9000",
             };
@@ -48,7 +79,7 @@ namespace IntegrationTest.ZipCodeTests
             var specificZipCodeResponse = await client.PutAsync(_uri + $"?id={id}", byteContent);
             
             // Assert
-            specificZipCodeResponse.EnsureSuccessStatusCode();
+            specificZipCodeResponse.Should().Be(System.Net.HttpStatusCode.Created);
             
         }
 
