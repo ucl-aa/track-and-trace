@@ -76,18 +76,19 @@ namespace IntegrationTest.ZipCodeTests
             // Act
             ByteArrayContent byteContent = CreateContent(zipCode);
 
-            var specificZipCodeResponse = await client.PutAsync(_uri + $"?id={id}", byteContent);
-            
+            HttpResponseMessage putWithCreateResponse = await PutZipCode(secondZipCode, client, secondId);
+            HttpResponseMessage sameIdResponse = await PutZipCode(thirdZipCode, client, id);
+
             // Assert
             specificZipCodeResponse.Should().Be(System.Net.HttpStatusCode.Created);
             
         }
 
-        private async Task<HttpResponseMessage> PutZipCode(ZipCodeDto firstZipCode, HttpClient client)
+        private async Task<HttpResponseMessage> PutZipCode(ZipCodeDto firstZipCode, HttpClient client, int id)
         {
             ByteArrayContent byteContent = CreateContent(firstZipCode);
 
-            HttpResponseMessage response = await client.PutAsync(_uri, byteContent);
+            HttpResponseMessage response = await client.PutAsync(_uri + $"?id={id}", byteContent);
             response.EnsureSuccessStatusCode();
 
             return response;
