@@ -42,14 +42,14 @@ namespace IntegrationTest.ZipCodeTests
             int id = responseContent.ZipCodeId;
 
             // Act
-            HttpResponseMessage specificZipCodeResponse = await client.DeleteAsync(_uri + $"?id={id}");
+            HttpResponseMessage noContentResponse = await client.DeleteAsync(_uri + $"?id={id}");
 
             // Assert
-            specificZipCodeResponse.Should().NotBeNull().And.Be(System.Net.HttpStatusCode.NoContent);
+            noContentResponse.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
 
             List<ZipCode>? specificZipCode =
                 JsonConvert.DeserializeObject<List<ZipCode>>(
-                    await specificZipCodeResponse.Content.ReadAsStringAsync());
+                    await noContentResponse.Content.ReadAsStringAsync());
             specificZipCode.Should().BeNull();
         }
 

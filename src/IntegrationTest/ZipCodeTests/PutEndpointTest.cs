@@ -22,7 +22,7 @@ namespace IntegrationTest.ZipCodeTests
         }
 
         [Fact]
-        public async Task Should_returnSpecificZipCode_when_callingPutZipCodeWithId()
+        public async Task Should_returnCreatedStatus_when_callingPutZipCodeWithNewId()
         {
             // Expensive to create factory for each test, but it ensures that each test is independent.
             // Arrange
@@ -34,26 +34,22 @@ namespace IntegrationTest.ZipCodeTests
                 ZipCodeValue = "9250",
             };
 
-            var firstResponse = await PutZipCode(zipCode, client);
+            // Act
+            ByteArrayContent byteContent = CreateContent(zipCode);
+            var putWithCreateResponse = await client.PutAsync(_uri + $"?id={1}", byteContent);
 
             ZipCode? responseContent =
                 JsonConvert.DeserializeObject<ZipCode>
-                    (await firstResponse.Content.ReadAsStringAsync());
-            int id = responseContent.ZipCodeId;
-
-            // Act
-            ByteArrayContent byteContent = CreateContent(zipCode);
-            await client.PutAsync(_uri + $"?id={id}", byteContent);
-
-            var specificZipCodeResponse = await client.PutAsync(_uri + $"?id={id}", byteContent);
+                (await putWithCreateResponse.Content.ReadAsStringAsync());
+                    int id = responseContent.ZipCodeId;
 
             // Assert
-            specificZipCodeResponse.EnsureSuccessStatusCode();
+            putWithCreateResponse.Should().Be(System.Net.HttpStatusCode.Created);
 
         }
 
         [Fact]
-        public async Task Should_returnSpecificZipCode_when_callingPutZipCodeWithExistingId()
+        public async Task Should_returnOKStatus_when_callingPutZipCodeWithExistingId()
         {
             // Expensive to create factory for each test, but it ensures that each test is independent.
             // Arrange
@@ -66,7 +62,7 @@ namespace IntegrationTest.ZipCodeTests
             };
 
             
-            var firstResponse = await PutZipCode(zipCode, client);
+            var firstResponse = await PutZipCode(zipCode, client, 1);
 
             ZipCode? responseContent =
                 JsonConvert.DeserializeObject<ZipCode>
@@ -76,11 +72,10 @@ namespace IntegrationTest.ZipCodeTests
             // Act
             ByteArrayContent byteContent = CreateContent(zipCode);
 
-            HttpResponseMessage putWithCreateResponse = await PutZipCode(secondZipCode, client, secondId);
-            HttpResponseMessage sameIdResponse = await PutZipCode(thirdZipCode, client, id);
+            HttpResponseMessage putWithCreateResponse = await PutZipCode(zipCode, client, id);
 
             // Assert
-            specificZipCodeResponse.Should().Be(System.Net.HttpStatusCode.Created);
+            putWithCreateResponse.Should().Be(System.Net.HttpStatusCode.OK);
             
         }
 
