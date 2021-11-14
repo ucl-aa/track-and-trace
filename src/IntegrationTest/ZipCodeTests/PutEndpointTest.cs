@@ -28,20 +28,14 @@ namespace IntegrationTest.ZipCodeTests
             // Arrange
             var client = _factory.CreateClient();
 
-            int amountOfZipCodes = 2;
-            ZipCodeDto firstZipCode = new()
+            ZipCodeDto zipCode = new()
             {
                 City = "Aalborg",
                 ZipCodeValue = "9000",
             };
-            ZipCodeDto secondZipCode = new()
-            {
-                City = "Vordingborg",
-                ZipCodeValue = "6007",
-            };
+
             
-            var firstResponse = await PutZipCode(firstZipCode, client);
-            await PutZipCode(secondZipCode, client);
+            var firstResponse = await PutZipCode(zipCode, client);
 
             ZipCode? responseContent =
                 JsonConvert.DeserializeObject<ZipCode>
@@ -49,7 +43,7 @@ namespace IntegrationTest.ZipCodeTests
             int id = responseContent.ZipCodeId;
 
             // Act
-            ByteArrayContent byteContent = CreateContent(firstZipCode);
+            ByteArrayContent byteContent = CreateContent(zipCode);
 
             var specificZipCodeResponse = await client.PutAsync(_uri + $"?id={id}", byteContent);
             

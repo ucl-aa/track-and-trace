@@ -22,26 +22,19 @@ namespace IntegrationTest.ZipCodeTests
         }
 
         [Fact]
-        public async Task Should_returnSpecificZipCode_when_callingGetZipCodeWithId()
+        public async Task Should_returnNoContent_when_callingDeleteZipCodeWithId()
         {
             // Expensive to create factory for each test, but it ensures that each test is independent.
             // Arrange
             var client = _factory.CreateClient();
 
-            int amountOfZipCodes = 2;
-            ZipCodeDto firstZipCode = new()
+            ZipCodeDto zipCode = new()
             {
                 City = "Aalborg",
                 ZipCodeValue = "9000",
             };
-            ZipCodeDto secondZipCode = new()
-            {
-                City = "Vordingborg",
-                ZipCodeValue = "6007",
-            };
             
-            var firstResponse = await PostZipCode(firstZipCode, client);
-            await PostZipCode(secondZipCode, client);
+            var firstResponse = await PostZipCode(zipCode, client);
 
             ZipCode? responseContent =
                 JsonConvert.DeserializeObject<ZipCode>
@@ -49,15 +42,28 @@ namespace IntegrationTest.ZipCodeTests
             int id = responseContent.ZipCodeId;
 
             // Act
-            var specificZipCodeResponse = await client.DeleteAsync(_uri + $"?id={id}");
-            
+            HttpResponseMessage specificZipCodeResponse = await client.DeleteAsync(_uri + $"?id={id}");
+
             // Assert
-            specificZipCodeResponse.EnsureSuccessStatusCode();
-            
+            specificZipCodeResponse.Should().NotBeNull().And.Be(System.Net.HttpStatusCode.NoContent);
+
             List<ZipCode>? specificZipCode =
                 JsonConvert.DeserializeObject<List<ZipCode>>(
                     await specificZipCodeResponse.Content.ReadAsStringAsync());
             specificZipCode.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task Should_returnNotFound_when_callingDeleteZipCodeWithId()
+        {
+            //Arrange 
+            var client = _factory.CreateClient();
+
+            //Act
+            HttpResponseMessage specificZipCodeResponse = await client.DeleteAsync(_uri + $"?id={1}");
+
+            // Assert
+            specificZipCodeResponse.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
 
         private async Task<HttpResponseMessage> PostZipCode(ZipCodeDto firstZipCode, HttpClient client)
