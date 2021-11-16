@@ -125,6 +125,7 @@ namespace Backend.Controllers
             {
                 deliveries = await _deliveryService.GetAsync(deliveryId);
                 await _statusService.GetAsync(id);
+                await _statusService.DeleteAsync(id);
                 return Ok(await _statusService.UpdateAsync(id, statusDto, deliveries.ToList()[0]));
             }
             catch (EntityNotFoundException exception)

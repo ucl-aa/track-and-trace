@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Backend.DataTransferObjects;
+using Backend.Exceptions;
 using Backend.Models;
 using Backend.Persistency;
 using Backend.Services.Generics;
@@ -37,8 +38,9 @@ namespace Backend.Services
 
         public async Task<ZipCode> UpdateAsync(int id, ZipCodeDto zipCodeDto)
         {
-            await _deleteService.DeleteAsync(id);
-            return await _addService.AddAsync(zipCodeDto.GetZipCode());
+            ZipCode zipCode = zipCodeDto.GetZipCode();
+            zipCode.ZipCodeId = id;
+            return await _addService.AddAsync(zipCode);
         }
     }
 }
