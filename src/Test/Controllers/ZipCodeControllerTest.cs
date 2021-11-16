@@ -107,8 +107,9 @@ namespace Test.Controllers
             }
 
             [Fact]
-            public async void Should_useServiceWhen_when_postingZipCode()
+            public async void Should_useServiceAndReturnCreatedAt_when_postingZipCodeSuccessfully()
             {
+                // Arrange
                 ZipCodeDto zipCodeDto = new ZipCodeDto
                 {
                     City = "Tommerup",
@@ -116,17 +117,23 @@ namespace Test.Controllers
                 };
                 A.CallTo(() => _zipCodeService.AddAsync(zipCodeDto)).Returns(new ZipCode
                 {
+                    ZipCodeId = 5,
                     City = zipCodeDto.City,
                     ZipCodeValue = zipCodeDto.ZipCodeValue,
                 });
 
+                // Act
                 ActionResult<ZipCode> returnCode = await _controller.Post(zipCodeDto);
 
+                // Assert
                 A.CallTo(() => _zipCodeService.AddAsync(zipCodeDto))
                     .MustHaveHappenedOnceExactly();
+
+                returnCode.Result.Should().BeOfType(typeof(CreatedAtActionResult));
+
                 var result = returnCode.Result as CreatedAtActionResult;
-                ((ZipCode)result?.Value)?.City.Should().Be(zipCodeDto.City);
-                ((ZipCode)result?.Value)?.ZipCodeValue.Should().Be(zipCodeDto.ZipCodeValue);
+                ZipCode zipCode = (ZipCode)result?.Value;
+                zipCode.Should().BeEquivalentTo(zipCodeDto);
             }
 
             [Fact]

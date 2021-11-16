@@ -121,7 +121,7 @@ namespace Test.Controllers
             }
 
             [Fact]
-            public async void Should_useServiceWhen_when_postingStatus()
+            public async void Should_useServiceAndReturnCreatedAt_when_postingStatus()
             {
                 StatusDto statusDto = new StatusDto
                 {
@@ -139,9 +139,10 @@ namespace Test.Controllers
 
                 A.CallTo(() => _statusService.AddAsync(_delivery, statusDto))
                     .MustHaveHappenedOnceExactly();
+
+                returnCode.Result.Should().BeOfType<CreatedAtActionResult>();
                 var result = returnCode.Result as CreatedAtActionResult;
-                ((Status)result?.Value)?.UpdateTime.Should().Be(statusDto.UpdateTime);
-                ((Status)result?.Value)?.Message.Should().Be(statusDto.Message);
+                result?.Value.Should().BeEquivalentTo(statusDto);
             }
 
             [Fact]

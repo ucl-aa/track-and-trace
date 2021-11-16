@@ -100,6 +100,7 @@ namespace Backend.Controllers
             try
             {
                 await _zipCodeService.GetAsync(id);
+                await _zipCodeService.DeleteAsync(id);
                 return Ok(await _zipCodeService.UpdateAsync(id, zipCodeDto));
             }
             catch (EntityNotFoundException)

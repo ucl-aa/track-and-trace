@@ -39,8 +39,8 @@ namespace Backend.Services
         public async Task<Status> UpdateAsync(int id, StatusDto statusDto, Delivery delivery)
         {
             Status status = statusDto.GetStatus();
+            status.Id = id;
             delivery.StatusHistory.Add(status);
-            await _deleteService.DeleteAsync(id);
             return await _addService.AddAsync(status);
         }
     }

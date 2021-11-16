@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -6,6 +7,8 @@ using Backend;
 using Backend.DataTransferObjects;
 using Backend.Models;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -28,6 +31,7 @@ namespace IntegrationTest.ZipCodeTests
             // Arrange
             var client = _factory.CreateClient();
 
+            int wantedId = 1;
             ZipCodeDto zipCode = new()
             {
                 City = "Aarhus",
@@ -36,15 +40,16 @@ namespace IntegrationTest.ZipCodeTests
 
             // Act
             ByteArrayContent byteContent = CreateContent(zipCode);
-            var putWithCreateResponse = await client.PutAsync(_uri + $"?id={1}", byteContent);
+            var putWithCreateResponse = await client.PutAsync(_uri + $"?id={wantedId}", byteContent);
 
             ZipCode? responseContent =
                 JsonConvert.DeserializeObject<ZipCode>
-                (await putWithCreateResponse.Content.ReadAsStringAsync());
-                    int id = responseContent.ZipCodeId;
+                (await putWithCreateResponse.Content.ReadAsStringAsync()); 
+            int id = responseContent.ZipCodeId;
 
             // Assert
-            putWithCreateResponse.Should().Be(System.Net.HttpStatusCode.Created);
+            putWithCreateResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+            id.Should().Be(wantedId);
 
         }
 
@@ -60,9 +65,9 @@ namespace IntegrationTest.ZipCodeTests
                 City = "Aalborg",
                 ZipCodeValue = "9000",
             };
+            int wantedId = 1;
 
-            
-            var firstResponse = await PutZipCode(zipCode, client, 1);
+            var firstResponse = await PutZipCode(zipCode, client, wantedId);
 
             ZipCode? responseContent =
                 JsonConvert.DeserializeObject<ZipCode>
@@ -70,13 +75,11 @@ namespace IntegrationTest.ZipCodeTests
             int id = responseContent.ZipCodeId;
 
             // Act
-            ByteArrayContent byteContent = CreateContent(zipCode);
-
             HttpResponseMessage putWithCreateResponse = await PutZipCode(zipCode, client, id);
 
             // Assert
-            putWithCreateResponse.Should().Be(System.Net.HttpStatusCode.OK);
-            
+            putWithCreateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            id.Should().Be(wantedId);
         }
 
         private async Task<HttpResponseMessage> PutZipCode(ZipCodeDto firstZipCode, HttpClient client, int id)
