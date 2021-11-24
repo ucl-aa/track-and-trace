@@ -14,7 +14,7 @@ steps:
       - dotnet test src/IntegrationTest
 
   - name: load-test
-      image : loadimpact/k6
+      image: loadimpact/k6
       ports :
         - '6565:6565'
       commands:
