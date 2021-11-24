@@ -15,7 +15,7 @@ steps:
     - cron
     cron :
     include:
-      - nightly
+      - loadtest
 
 services:
   - name: docker
