@@ -14,16 +14,16 @@ steps:
       - dotnet test src/IntegrationTest
 
   - name: load-test
-      image: loadimpact/k6
-      ports :
-        - '6565:6565'
-      commands:
-        - docker run -i loadimpact/k6 run <loadscript.js
+    image: loadimpact/k6
+    ports:
+      - '6565:6565'
+    commands:
+      - docker run -i loadimpact/k6 run <loadscript.js
 
-    trigger :
-      event :
+    trigger:
+      event:
       - cron
-      cron :
+      cron:
       include:
         - loadtest
 
