@@ -13,6 +13,20 @@ steps:
     commands:
       - dotnet test src/IntegrationTest
 
+  - name: Run Load-Test
+      image : loadimpact/k6
+      ports :
+        - '6565:6565'
+      commands:
+        - docker run -i loadimpact/k6 run <loadscript.js
+
+    trigger :
+      event :
+      - cron
+      cron :
+      include:
+        - loadtest
+
   - name: semantic-release
     image: cr.seen.wtf/semantic-release-container
     pull: always
