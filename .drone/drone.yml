@@ -18,7 +18,7 @@ steps:
     ports:
       - "6565:6565"
     commands:
-      - docker run -i loadimpact/k6 run <loadscript.js
+      - k6 run <loadscript.js
 
     trigger:
       event:
