@@ -16,7 +16,7 @@ steps:
   - name: load-test
     image: loadimpact/k6
     commands:
-      - k6 run --address "127.0.0.1:3000" loadscript.js
+      - k6 run loadscript.js
 
     trigger:
       event:
