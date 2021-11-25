@@ -16,7 +16,7 @@ steps:
   - name: load-test
     image: loadimpact/k6
     ports:
-      - "6565:6565"
+      - 6565:6565
     commands:
       - k6 run <loadscript.js
 
