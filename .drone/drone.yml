@@ -23,7 +23,7 @@ steps:
       - cron
       cron:
       include:
-        - loadtest
+        - feature/24-q4-loadtest
 
   - name: semantic-release
     image: cr.seen.wtf/semantic-release-container
