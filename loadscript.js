@@ -3,7 +3,7 @@ import { check, group, sleep } from 'k6';
 
  const url = 'https://aa.seen.wtf/';
 
- export let Options = {
+ export const options = {
   stages: [
     { duration: '5m', target: 60 }, // simulate ramp-up of traffic from 1 to 60 users over 5 minutes.
     { duration: '10m', target: 60 }, // stay at 60 users for 10 minutes
@@ -23,9 +23,14 @@ export default function () {
   http.get(url);
   sleep(3);
   http.get(url);
+  sleep(3);
   http.get(url);
+  sleep(3);
   http.get(url);
+  sleep(3);
   http.get(url);
+  sleep(3);
   http.get(url);
+  sleep(3);
   http.get(url);
 }
