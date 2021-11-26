@@ -22,4 +22,10 @@ import { check, group, sleep } from 'k6';
 export default function () {
   http.get(url);
   sleep(3);
+  http.get(url);
+  http.get(url);
+  http.get(url);
+  http.get(url);
+  http.get(url);
+  http.get(url);
 }
