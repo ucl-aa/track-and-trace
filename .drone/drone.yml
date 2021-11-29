@@ -17,6 +17,9 @@ steps:
     image: loadimpact/k6
     commands:
       - k6 run loadscript.js
+    environment: 
+        K6_OUT:
+          "prometheus=TODO"
 
     trigger:
       event:
